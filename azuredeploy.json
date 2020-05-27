@@ -208,7 +208,7 @@
                     ],
                     "properties": {
                         "PROJECT": "src\\MultiChannelToDo.Web\\MultiChannelToDo.Web.csproj",
-                        "apiPath": "[concat('http://', variables('apiSiteName'), '.azurewebsites.net/api')]"
+                        "apiPath": "[concat('https://', variables('apiSiteName'), '.azurewebsites.net/api')]"
                     }
                 },
                 {
