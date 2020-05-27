@@ -155,7 +155,7 @@
                     ],
                     "properties": {
                         "PROJECT": "src\\MultiChannelToDo\\MultiChannelToDo.csproj",
-                        "clientUrl": "[concat('http://', parameters('siteName'), '.azurewebsites.net')]"
+                        "clientUrl": "[concat('https://', parameters('siteName'), '.azurewebsites.net')]"
                     }
                 },
                 {
