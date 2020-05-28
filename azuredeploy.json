@@ -300,7 +300,7 @@
         "name": "appInsights",
         "type": "Microsoft.Insights/components",
         "location": "[parameters('sizeLocation')]",
-        "apiVersion": "2014-04-01",
+        "apiVersion": "2015-05-01",
         "dependsOn": [
           "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
         ],
@@ -308,6 +308,7 @@
           "displayName": "Component appInsights"
         },
         "properties": {
+          "Application_Type": "web",
           "applicationId": "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
         }
       }
