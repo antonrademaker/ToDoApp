@@ -226,6 +226,88 @@
                     }
                 }
             ]
+        },
+      {
+        "name": "[concat(parameters('hostingPlanName'), '-', resourceGroup().name)]",
+        "type": "Microsoft.Insights/autoscalesettings",
+        "location": "[parameters('sizeLocation')]",
+        "apiVersion": "2014-04-01",
+        "dependsOn": [
+          "[resourceId('Microsoft.Web/serverFarms', parameters('hostingPlanName'))]"
+        ],
+        "tags": {
+          "[concat('hidden-link:', resourceId('Microsoft.Web/serverFarms', parameters('hostingPlanName')))]": "Resource",
+          "displayName": "appInsights AutoScale"
+        },
+        "properties": {
+          "name": "[concat(parameters('hostingPlanName'), '-', resourceGroup().name)]",
+          "profiles": [
+            {
+              "name": "Default",
+              "capacity": {
+                "minimum": 1,
+                "maximum": 2,
+                "default": 1
+              },
+              "rules": [
+                {
+                  "metricTrigger": {
+                    "metricName": "CpuPercentage",
+                    "metricResourceUri": "[resourceId('Microsoft.Web/serverFarms', parameters('hostingPlanName'))]",
+                    "timeGrain": "PT1M",
+                    "statistic": "Average",
+                    "timeWindow": "PT10M",
+                    "timeAggregation": "Average",
+                    "operator": "GreaterThan",
+                    "threshold": 800
+                  },
+                  "scaleAction": {
+                    "direction": "Increase",
+                    "type": "ChangeCount",
+                    "value": 1,
+                    "cooldown": "PT10M"
+                  }
+                },
+                {
+                  "metricTrigger": {
+                    "metricName": "CpuPercentage",
+                    "metricResourceUri": "[resourceId('Microsoft.Web/serverFarms', parameters('hostingPlanName'))]",
+                    "timeGrain": "PT1M",
+                    "statistic": "Average",
+                    "timeWindow": "PT1H",
+                    "timeAggregation": "Average",
+                    "operator": "LessThan",
+                    "threshold": 600
+                  },
+                  "scaleAction": {
+                    "direction": "Decrease",
+                    "type": "ChangeCount",
+                    "value": 1,
+                    "cooldown": "PT1H"
+                  }
+                }
+              ]
+            }
+          ],
+          "enabled": true,
+          "targetResourceUri": "[resourceId('Microsoft.Web/serverFarms', parameters('hostingPlanName'))]"
         }
+      },
+      {
+        "name": "appInsights",
+        "type": "Microsoft.Insights/components",
+        "location": "[parameters('sizeLocation')]",
+        "apiVersion": "2015-05-01",
+        "dependsOn": [
+          "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
+        ],
+        "tags": {
+          "displayName": "Component appInsights"
+        },
+        "properties": {
+          "Application_Type": "web",
+          "applicationId": "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
+        }
+      }
     ]
 }
